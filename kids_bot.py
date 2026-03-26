@@ -31,7 +31,8 @@ def ask_chatgpt(user_message):
             ]
         )
         return response.choices[0].message.content
-    except:
+    except Exception as e:
+        print(f"AI Error: {e}")
         return "ခဏလေးနော် ကလေးတို့၊ ဆရာလေး ခဏနားနေလို့ပါ။"
 
 # --- ၃။ BOT ACTIONS ---
@@ -40,9 +41,8 @@ def ask_chatgpt(user_message):
 def start(message):
     keyboard = InlineKeyboardMarkup(row_width=1)
     
-    # ဆရာတို့ စီစဉ်ထားသည့် ဂိမ်းများခလုတ်
+    # ခလုတ်များ
     btn_games = InlineKeyboardButton(text="🎮 ဆရာတို့ စီစဉ်ထားတဲ့ ဂိမ်းများဆော့မယ်", callback_data="all_games")
-    # ဆရာတို့ ဗီဒီယိုခလုတ်
     btn_vids = InlineKeyboardButton(text="🎥 ဆရာတို့ရဲ့ မိတ်ဆက်ဗီဒီယိုများ", callback_data="video_menu")
     
     keyboard.add(btn_games, btn_vids)
@@ -50,7 +50,8 @@ def start(message):
     welcome_text = (
         "မင်္ဂလာပါ ကလေးတို့ရေ! ✨\n\n"
         "ဒီ Bot လေးကို **ဆရာရနောင်စိုး** နဲ့ **ဆရာဟိန်မင်းထက်** တို့က ကလေးတို့အတွက် အထူးစီစဉ်ပေးထားတာပါ။\n\n"
-        "ဆရာတို့ စီစဉ်ပေးထားတဲ့ ဂိမ်းလေးတွေ အများကြီးရှိတယ်၊ ဆော့ကြမလား ကလေးတို့? 😍"
+        "ဆရာတို့ စီစဉ်ပေးထားတဲ့ ဂိမ်းလေးတွေ အများကြီးရှိတယ်၊ ဆော့ကြမလား ကလေးတို့? 😍\n\n"
+        "ဒါမှမဟုတ် သိချင်တာရှိရင်လည်း ဆရာလေးကို စာရိုက်ပြီး မေးလို့ရတယ်နော်!"
     )
     bot.send_message(message.chat.id, welcome_text, reply_markup=keyboard)
 
@@ -77,14 +78,18 @@ def handle_query(call):
         bot.edit_message_text("ဘယ်ဆရာ့ဗီဒီယိုကို အရင်ကြည့်မလဲ?", call.message.chat.id, call.message.message_id, reply_markup=video_keyboard)
 
     elif call.data == "back_home":
+        # Delete message then show main menu
         bot.delete_message(call.message.chat.id, call.message.message_id)
         start(call.message)
 
+# စာရိုက်ပို့သမျှကို AI က ဖြေပေးမည့်အပိုင်း
 @bot.message_handler(func=lambda message: True)
 def chat_with_kids(message):
+    # AI ဆီက အဖြေတောင်းမယ်
     ai_response = ask_chatgpt(message.text)
+    # ကလေးဆီ ပြန်ပို့မယ်
     bot.reply_to(message, ai_response)
 
 # --- ၄။ RUN BOT ---
-print("Kids Creative Bot is now online...")
-bot.polling()
+print("Kids Creative Bot with AI is now online...")
+bot.infinity_polling()
