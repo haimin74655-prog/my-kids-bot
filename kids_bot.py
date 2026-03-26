@@ -3,9 +3,13 @@ import openai
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # --- ၁။ CONFIGURATION ---
+# ဆရာ့ရဲ့ Telegram Token
 TELEGRAM_TOKEN = '8735668720:AAE9i1rq3--dshBiIU8ieZyb2_Qo2dq5De4'
-OPENAI_API_KEY = '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
-# Links
+
+# ဆရာအခုပေးလိုက်တဲ့ OpenAI API Key အသစ်
+OPENAI_API_KEY = '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'
+
+# Links (ဆရာ့ရဲ့ မူလလင့်ခ်များ)
 SAYA_RANAUNGSOE_TIKTOK = 'https://www.tiktok.com/@yannaung43/video/7562974489709956370'
 SAYA_HEINMINHTET_TIKTOK = 'https://www.tiktok.com/@designer.x6/video/7434122273025494280'
 COLORING_GAME_LINK = 'https://www.hellokids.com/c_33859/free-online-games/online-games/skill-games/coloring-frog'
@@ -39,18 +43,14 @@ def ask_chatgpt(user_message):
 @bot.message_handler(commands=['start'])
 def start(message):
     keyboard = InlineKeyboardMarkup(row_width=1)
-    
-    # ခလုတ်များ
     btn_games = InlineKeyboardButton(text="🎮 ဆရာတို့ စီစဉ်ထားတဲ့ ဂိမ်းများဆော့မယ်", callback_data="all_games")
     btn_vids = InlineKeyboardButton(text="🎥 ဆရာတို့ရဲ့ မိတ်ဆက်ဗီဒီယိုများ", callback_data="video_menu")
-    
     keyboard.add(btn_games, btn_vids)
     
     welcome_text = (
         "မင်္ဂလာပါ ကလေးတို့ရေ! ✨\n\n"
         "ဒီ Bot လေးကို **ဆရာရနောင်စိုး** နဲ့ **ဆရာဟိန်မင်းထက်** တို့က ကလေးတို့အတွက် အထူးစီစဉ်ပေးထားတာပါ။\n\n"
-        "ဆရာတို့ စီစဉ်ပေးထားတဲ့ ဂိမ်းလေးတွေ အများကြီးရှိတယ်၊ ဆော့ကြမလား ကလေးတို့? 😍\n\n"
-        "ဒါမှမဟုတ် သိချင်တာရှိရင်လည်း ဆရာလေးကို စာရိုက်ပြီး မေးလို့ရတယ်နော်!"
+        "ဆရာတို့ စီစဉ်ပေးထားတဲ့ ဂိမ်းလေးတွေ ဆော့ကြမလား? ဒါမှမဟုတ် ဆရာလေးကို သိချင်တာတွေ မေးလို့ရတယ်နော်!"
     )
     bot.send_message(message.chat.id, welcome_text, reply_markup=keyboard)
 
@@ -58,37 +58,33 @@ def start(message):
 def handle_query(call):
     if call.data == "all_games":
         game_keyboard = InlineKeyboardMarkup(row_width=1)
-        btn_color = InlineKeyboardButton(text="🎨 ဖားကလေး ဆေးရောင်ခြယ်ဂိမ်း", url=COLORING_GAME_LINK)
-        btn_type1 = InlineKeyboardButton(text="🚀 Keyboard Jump (စာရိုက်ဂိမ်း)", url=TYPING_GAME_1)
-        btn_type2 = InlineKeyboardButton(text="⌨️ Typing Game (Poki)", url=TYPING_GAME_2)
-        btn_type3 = InlineKeyboardButton(text="💃 Dance Mat Typing (BBC)", url=TYPING_GAME_3)
-        btn_back = InlineKeyboardButton(text="⬅️ နောက်သို့", callback_data="back_home")
-        
-        game_keyboard.add(btn_color, btn_type1, btn_type2, btn_type3, btn_back)
-        bot.edit_message_text("ဆရာတို့ စီစဉ်ပေးထားတဲ့ ဂိမ်းတွေထဲက ဘယ်ဟာကို အရင်ဆော့မလဲ ကလေးတို့?", call.message.chat.id, call.message.message_id, reply_markup=game_keyboard)
+        game_keyboard.add(
+            InlineKeyboardButton(text="🎨 ဖားကလေး ဆေးရောင်ခြယ်ဂိမ်း", url=COLORING_GAME_LINK),
+            InlineKeyboardButton(text="🚀 Keyboard Jump (စာရိုက်ဂိမ်း)", url=TYPING_GAME_1),
+            InlineKeyboardButton(text="⌨️ Typing Game (Poki)", url=TYPING_GAME_2),
+            InlineKeyboardButton(text="💃 Dance Mat Typing (BBC)", url=TYPING_GAME_3),
+            InlineKeyboardButton(text="⬅️ နောက်သို့", callback_data="back_home")
+        )
+        bot.edit_message_text("ဘယ်ဂိမ်းကို အရင်ဆော့မလဲ ကလေးတို့?", call.message.chat.id, call.message.message_id, reply_markup=game_keyboard)
 
     elif call.data == "video_menu":
         video_keyboard = InlineKeyboardMarkup(row_width=1)
-        btn_ranaung = InlineKeyboardButton(text="🎥 ဆရာရနောင်စိုး ဗီဒီယို", url=SAYA_RANAUNGSOE_TIKTOK)
-        btn_heinmin = InlineKeyboardButton(text="🎥 ဆရာဟိန်မင်းထက် ဗီဒီယို", url=SAYA_HEINMINHTET_TIKTOK)
-        btn_back = InlineKeyboardButton(text="⬅️ နောက်သို့", callback_data="back_home")
-        
-        video_keyboard.add(btn_ranaung, btn_heinmin, btn_back)
+        video_keyboard.add(
+            InlineKeyboardButton(text="🎥 ဆရာရနောင်စိုး ဗီဒီယို", url=SAYA_RANAUNGSOE_TIKTOK),
+            InlineKeyboardButton(text="🎥 ဆရာဟိန်မင်းထက် ဗီဒီယို", url=SAYA_HEINMINHTET_TIKTOK),
+            InlineKeyboardButton(text="⬅️ နောက်သို့", callback_data="back_home")
+        )
         bot.edit_message_text("ဘယ်ဆရာ့ဗီဒီယိုကို အရင်ကြည့်မလဲ?", call.message.chat.id, call.message.message_id, reply_markup=video_keyboard)
 
     elif call.data == "back_home":
-        # Delete message then show main menu
         bot.delete_message(call.message.chat.id, call.message.message_id)
         start(call.message)
 
-# စာရိုက်ပို့သမျှကို AI က ဖြေပေးမည့်အပိုင်း
 @bot.message_handler(func=lambda message: True)
 def chat_with_kids(message):
-    # AI ဆီက အဖြေတောင်းမယ်
     ai_response = ask_chatgpt(message.text)
-    # ကလေးဆီ ပြန်ပို့မယ်
     bot.reply_to(message, ai_response)
 
 # --- ၄။ RUN BOT ---
-print("Kids Creative Bot with AI is now online...")
+print("Kids Creative Bot is now online with New Key...")
 bot.infinity_polling()
