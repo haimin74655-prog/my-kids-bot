@@ -4,8 +4,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # --- ၁။ CONFIGURATION ---
 TELEGRAM_TOKEN = '8735668720:AAE9i1rq3--dshBiIU8ieZyb2_Qo2dq5De4'
-OPENAI_API_KEY = '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'
-
+OPENAI_API_KEY = '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
 # Links
 SAYA_RANAUNGSOE_TIKTOK = 'https://www.tiktok.com/@yannaung43/video/7562974489709956370'
 SAYA_HEINMINHTET_TIKTOK = 'https://www.tiktok.com/@designer.x6/video/7434122273025494280'
